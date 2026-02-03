@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fundraising Wizard - Customer Journey & Automations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #e4e4e7;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #9ca3af;
+            margin-bottom: 2rem;
+        }
+        
+        /* Phase Navigation */
+        .phase-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .phase-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .phase-btn.design { background: #3b82f6; color: white; }
+        .phase-btn.launch { background: #8b5cf6; color: white; }
+        .phase-btn.portal { background: #10b981; color: white; }
+        .phase-btn.public { background: #f59e0b; color: white; }
+        .phase-btn.all { background: #6b7280; color: white; }
+        
+        .phase-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .phase-btn.active {
+            ring: 2px solid white;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+        }
+        
+        /* Journey Container */
+        .journey-container {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+        
+        /* Phase Columns */
+        .phase {
+            min-width: 320px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .phase-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .phase.design .phase-icon { background: #3b82f6; }
+        .phase.launch .phase-icon { background: #8b5cf6; }
+        .phase.portal .phase-icon { background: #10b981; }
+        .phase.public .phase-icon { background: #f59e0b; }
+        
+        .phase-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .phase-subtitle {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+        
+        /* Steps */
+        .step {
+            background: rgba(255,255,255,0.03);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+        
+        .step:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.2);
+            transform: translateX(4px);
+        }
+        
+        .step.active {
+            border-color: #60a5fa;
+            background: rgba(96,165,250,0.1);
+        }
+        
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+        
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .step-desc {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+        
+        /* Automation Badge */
+        .automation-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: #7c3aed;
+            color: white;
+            font-size: 0.65rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 1rem;
+            margin-left: auto;
+        }
+        
+        .webhook-badge {
+            background: #0ea5e9;
+        }
+        
+        /* Arrow Connectors */
+        .connector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            color: #6b7280;
+            font-size: 1.5rem;
+        }
+        
+        /* Detail Panel */
+        .detail-panel {
+            position: fixed;
+            right: -450px;
+            top: 0;
+            width: 420px;
+            height: 100vh;
+            background: #1e293b;
+            border-left: 1px solid rgba(255,255,255,0.1);
+            padding: 2rem;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        
+        .detail-panel.open {
+            right: 0;
+        }
+        
+        .detail-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #9ca3af;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .detail-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .detail-phase {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .detail-section {
+            margin-top: 1.5rem;
+        }
+        
+        .detail-section h4 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #9ca3af;
+            margin-bottom: 0.75rem;
+        }
+        
+        .detail-list {
+            list-style: none;
+        }
+        
+        .detail-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.9rem;
+        }
+        
+        .detail-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-code {
+            background: rgba(0,0,0,0.3);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.8rem;
+            overflow-x: auto;
+        }
+        
+        /* Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: #9ca3af;
+        }
+        
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        /* Stats Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .journey-container {
+                flex-direction: column;
+            }
+            .phase {
+                min-width: 100%;
+            }
+            .connector {
+                transform: rotate(90deg);
+                min-height: 40px;
+            }
+            .detail-panel {
+                width: 100%;
+                right: -100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧙‍♂️ Fundraising Wizard</h1>
+        <p class="subtitle">Customer Journey & Automation Map</p>
+        
+        <!-- Stats -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-value">85</div>
+                <div class="stat-label">Custom Fields</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">10</div>
+                <div class="stat-label">Workflows</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">2</div>
+                <div class="stat-label">Pipelines</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">16</div>
+                <div class="stat-label">Tags</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">10</div>
+                <div class="stat-label">Email Templates</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">5</div>
+                <div class="stat-label">Funnel Pages</div>
+            </div>
+        </div>
+        
+        <!-- Journey Flow -->
+        <div class="journey-container">
+            <!-- Phase 1: Design App -->
+            <div class="phase design" data-phase="design">
+                <div class="phase-header">
+                    <div class="phase-icon">🎨</div>
+                    <div>
+                        <div class="phase-title">Design App (BDP)</div>
+                        <div class="phase-subtitle">design.fundraisingwizard.com</div>
+                    </div>
+                </div>
+                
+                <div class="step" data-step="design-submit">
+                    <div class="step-title">
+                        <span class="step-number">1</span>
+                        Customer Submits Request
+                    </div>
+                    <div class="step-desc">Org info, colors, logo uploaded</div>
+                </div>
+                
+                <div class="step" data-step="design-generate">
+                    <div class="step-title">
+                        <span class="step-number">2</span>
+                        AI Generates Designs
+                        <span class="automation-badge">⚡ Auto</span>
+                    </div>
+                    <div class="step-desc">4 custom blanket designs created</div>
+                </div>
+                
+                <div class="step" data-step="design-review">
+                    <div class="step-title">
+                        <span class="step-number">3</span>
+                        Customer Reviews
+                    </div>
+                    <div class="step-desc">Approve, request revisions, or reject</div>
+                </div>
+                
+                <div class="step" data-step="design-admin">
+                    <div class="step-title">
+                        <span class="step-number">4</span>
+                        Admin Handles Revisions
+                    </div>
+                    <div class="step-desc">Manual design adjustments if needed</div>
+                </div>
+                
+                <div class="step" data-step="design-approve">
+                    <div class="step-title">
+                        <span class="step-number">5</span>
+                        Customer Approves
+                        <span class="webhook-badge automation-badge">📤 Webhook</span>
+                    </div>
+                    <div class="step-desc">CUSTOMER_APPROVED event fired</div>
+                </div>
+                
+                <div class="step" data-step="design-contract">
+                    <div class="step-title">
+                        <span class="step-number">6</span>
+                        Contract + Payment
+                        <span class="webhook-badge automation-badge">📤 Webhook</span>
+                    </div>
+                    <div class="step-desc">CONTRACT_SIGNED triggers launch</div>
+                </div>
+            </div>
+            
+            <div class="connector">→</div>
+            
+            <!-- Phase 2: Launch Service -->
+            <div class="phase launch" data-phase="launch">
+                <div class="phase-header">
+                    <div class="phase-icon">🚀</div>
+                    <div>
+                        <div class="phase-title">Launch Service</div>
+                        <div class="phase-subtitle">Vercel Serverless</div>
+                    </div>
+                </div>
+                
+                <div class="step" data-step="launch-create">
+                    <div class="step-title">
+                        <span class="step-number">7</span>
+                        Create Sub-Account
+                        <span class="automation-badge">⚡ Auto</span>
+                    </div>
+                    <div class="step-desc">GHL API: POST /locations</div>
+                </div>
+                
+                <div class="step" data-step="launch-snapshot">
+                    <div class="step-title">
+                        <span class="step-number">8</span>
+                        Apply Snapshot
+                        <span class="automation-badge">⚡ Auto</span>
+                    </div>
+                    <div class="step-desc">Template with all config cloned</div>
+                </div>
+                
+                <div class="step" data-step="launch-fields">
+                    <div class="step-title">
+                        <span class="step-number">9</span>
+                        Populate Custom Fields
+                        <span class="automation-badge">⚡ Auto</span>
+                    </div>
+                    <div class="step-desc">72 location fields mapped</div>
+                </div>
+                
+                <div class="step" data-step="launch-contact">
+                    <div class="step-title">
+                        <span class="step-number">10</span>
+                        Create Coordinator Contact
+                        <span class="automation-badge">⚡ Auto</span>
+                    </div>
+                    <div class="step-desc">For CRM & communications</div>
+                </div>
+                
+                <div class="step" data-step="launch-user">
+                    <div class="step-title">
+                        <span class="step-number">11</span>
+                        Create User + Send Invite
+                        <span class="automation-badge">⚡ Auto</span>
+                    </div>
+                    <div class="step-desc">Dashboard login access</div>
+                </div>
+                
+                <div class="step" data-step="launch-activate">
+                    <div class="step-title">
+                        <span class="step-number">12</span>
+                        Set Campaign Active
+                        <span class="webhook-badge automation-badge">📤 Webhook</span>
+                    </div>
+                    <div class="step-desc">FUNDRAISER_LAUNCHED event</div>
+                </div>
+            </div>
+            
+            <div class="connector">→</div>
+            
+            <!-- Phase 3: Portal -->
+            <div class="phase portal" data-phase="portal">
+                <div class="phase-header">
+                    <div class="phase-icon">🖥️</div>
+                    <div>
+                        <div class="phase-title">Coordinator Portal</div>
+                        <div class="phase-subtitle">GHL Sub-Account</div>
+                    </div>
+                </div>
+                
+                <div class="step" data-step="portal-welcome">
+                    <div class="step-title">
+                        <span class="step-number">13</span>
+                        Welcome Email
+                        <span class="automation-badge">⚡ Workflow</span>
+                    </div>
+                    <div class="step-desc">Campaign Launch Notification</div>
+                </div>
+                
+                <div class="step" data-step="portal-dashboard">
+                    <div class="step-title">
+                        <span class="step-number">14</span>
+                        Coordinator Logs In
+                    </div>
+                    <div class="step-desc">Access sales dashboard</div>
+                </div>
+                
+                <div class="step" data-step="portal-share">
+                    <div class="step-title">
+                        <span class="step-number">15</span>
+                        Share Fundraiser URL
+                    </div>
+                    <div class="step-desc">Social, email, group chats</div>
+                </div>
+                
+                <div class="step" data-step="portal-daily">
+                    <div class="step-title">
+                        <span class="step-number">16</span>
+                        Daily Summary
+                        <span class="automation-badge">⚡ Workflow</span>
+                    </div>
+                    <div class="step-desc">8am stats email to coordinator</div>
+                </div>
+                
+                <div class="step" data-step="portal-milestone">
+                    <div class="step-title">
+                        <span class="step-number">17</span>
+                        Milestone Alerts
+                        <span class="automation-badge">⚡ Workflow</span>
+                    </div>
+                    <div class="step-desc">25%, 50%, 75%, 100% celebrations</div>
+                </div>
+            </div>
+            
+            <div class="connector">→</div>
+            
+            <!-- Phase 4: Public Pages -->
+            <div class="phase public" data-phase="public">
+                <div class="phase-header">
+                    <div class="phase-icon">🌐</div>
+                    <div>
+                        <div class="phase-title">Public Fundraiser</div>
+                        <div class="phase-subtitle">{org}.fundraisingwizard.com</div>
+                    </div>
+                </div>
+                
+                <div class="step" data-step="public-visit">
+                    <div class="step-title">
+                        <span class="step-number">18</span>
+                        Supporter Visits
+                    </div>
+                    <div class="step-desc">Landing page with designs</div>
+                </div>
+                
+                <div class="step" data-step="public-signup">
+                    <div class="step-title">
+                        <span class="step-number">19</span>
+                        Supporter Signs Up
+                        <span class="automation-badge">⚡ Workflow</span>
+                    </div>
+                    <div class="step-desc">Welcome email + SMS sent</div>
+                </div>
+                
+                <div class="step" data-step="public-cart">
+                    <div class="step-title">
+                        <span class="step-number">20</span>
+                        Add to Cart
+                    </div>
+                    <div class="step-desc">Pipeline: Cart Started</div>
+                </div>
+                
+                <div class="step" data-step="public-abandon">
+                    <div class="step-title">
+                        <span class="step-number">21</span>
+                        Cart Abandonment
+                        <span class="automation-badge">⚡ Workflow</span>
+                    </div>
+                    <div class="step-desc">2hr email + 24hr SMS if no purchase</div>
+                </div>
+                
+                <div class="step" data-step="public-checkout">
+                    <div class="step-title">
+                        <span class="step-number">22</span>
+                        Checkout + Pay
+                    </div>
+                    <div class="step-desc">Stripe payment processed</div>
+                </div>
+                
+                <div class="step" data-step="public-confirm">
+                    <div class="step-title">
+                        <span class="step-number">23</span>
+                        Order Confirmation
+                        <span class="automation-badge">⚡ Workflow</span>
+                    </div>
+                    <div class="step-desc">Email + update totals</div>
+                </div>
+                
+                <div class="step" data-step="public-remind">
+                    <div class="step-title">
+                        <span class="step-number">24</span>
+                        Campaign Reminders
+                        <span class="automation-badge">⚡ Workflow</span>
+                    </div>
+                    <div class="step-desc">7 day, 3 day, last day</div>
+                </div>
+                
+                <div class="step" data-step="public-ship">
+                    <div class="step-title">
+                        <span class="step-number">25</span>
+                        Order Shipped
+                        <span class="automation-badge">⚡ Workflow</span>
+                    </div>
+                    <div class="step-desc">Tracking email + SMS</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #7c3aed;"></div>
+                Automated Workflow
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #0ea5e9;"></div>
+                Webhook Trigger
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #6b7280;"></div>
+                Manual Step
+            </div>
+        </div>
+    </div>
+    
+    <!-- Detail Panel -->
+    <div class="detail-panel" id="detailPanel">
+        <button class="detail-close" onclick="closeDetail()">×</button>
+        <h3 class="detail-title" id="detailTitle">Step Details</h3>
+        <span class="detail-phase" id="detailPhase">Phase</span>
+        <div id="detailContent"></div>
+    </div>
+    
+    <script>
+        const stepDetails = {
+            'design-submit': {
+                title: 'Customer Submits Design Request',
+                phase: 'Design App',
+                phaseColor: '#3b82f6',
+                description: 'Customer fills out the design request form with their organization details.',
+                fields: [
+                    'Organization name & type',
+                    'Logo upload',
+                    'Brand colors (primary, secondary, accent)',
+                    'Mascot name',
+                    'Fundraising purpose',
+                    'Contact information'
+                ],
+                ghlFields: ['organization_name', 'logo_url', 'brand_color_primary', 'coordinator_email']
+            },
+            'design-generate': {
+                title: 'AI Design Generation',
+                phase: 'Design App',
+                phaseColor: '#3b82f6',
+                description: 'AI automatically generates 4 custom blanket designs based on submitted info.',
+                automation: {
+                    type: 'Automatic',
+                    trigger: 'Form submission complete',
+                    action: 'Generate 4 design variations using brand colors, logo, and mascot'
+                },
+                outputs: ['design_option_1', 'design_option_2', 'design_option_3', 'design_option_4']
+            },
+            'design-contract': {
+                title: 'Contract Signed + Payment',
+                phase: 'Design App',
+                phaseColor: '#3b82f6',
+                description: 'Customer signs contract and completes initial payment. This triggers the Launch Service.',
+                webhook: {
+                    event: 'CONTRACT_SIGNED',
+                    payload: 'All 72 mapped fields from design app'
+                },
+                fields: ['contract_signed: true', 'contract_signed_date: timestamp', 'payment_method: stripe']
+            },
+            'launch-create': {
+                title: 'Create GHL Sub-Account',
+                phase: 'Launch Service',
+                phaseColor: '#8b5cf6',
+                description: 'Launch Service creates a new GHL location (sub-account) for this fundraiser.',
+                api: {
+                    method: 'POST',
+                    endpoint: '/locations',
+                    body: '{ name, companyId, snapshotId }'
+                }
+            },
+            'launch-user': {
+                title: 'Create User + Send Invite',
+                phase: 'Launch Service',
+                phaseColor: '#8b5cf6',
+                description: 'Creates a GHL user account for the coordinator so they can log into the dashboard.',
+                api: {
+                    method: 'POST',
+                    endpoint: '/users',
+                    body: '{ email, firstName, lastName, locationIds, role }'
+                },
+                notes: 'User receives email with password setup link'
+            },
+            'portal-welcome': {
+                title: 'Campaign Launch Notification',
+                phase: 'Coordinator Portal',
+                phaseColor: '#10b981',
+                workflow: {
+                    name: 'Campaign Launch',
+                    trigger: 'campaign_status changed to "active"',
+                    actions: [
+                        'Send "Your Fundraiser is LIVE!" email',
+                        'Include fundraiser URL',
+                        'Include dashboard login link'
+                    ]
+                },
+                template: 'campaign_launched'
+            },
+            'portal-daily': {
+                title: 'Daily Summary Email',
+                phase: 'Coordinator Portal',
+                phaseColor: '#10b981',
+                workflow: {
+                    name: 'Coordinator Daily Summary',
+                    trigger: 'Daily at 8:00 AM',
+                    filter: 'Contact has tag "coordinator"',
+                    actions: [
+                        'Send daily stats email',
+                        'Include: orders, total raised, days remaining',
+                        'List top supporters'
+                    ]
+                },
+                template: 'coordinator_daily_summary'
+            },
+            'public-signup': {
+                title: 'New Supporter Welcome',
+                phase: 'Public Fundraiser',
+                phaseColor: '#f59e0b',
+                workflow: {
+                    name: 'New Supporter Welcome',
+                    trigger: 'Contact Created + Tag "supporter" added',
+                    actions: [
+                        'Wait 1 minute',
+                        'Send welcome email',
+                        'Send welcome SMS',
+                        'Add to Pipeline: New Signup',
+                        'Internal notification to coordinator'
+                    ]
+                },
+                template: 'welcome_supporter'
+            },
+            'public-abandon': {
+                title: 'Cart Abandonment Recovery',
+                phase: 'Public Fundraiser',
+                phaseColor: '#f59e0b',
+                workflow: {
+                    name: 'Cart Abandonment',
+                    trigger: 'Pipeline stage "Cart Started" for > 2 hours',
+                    filter: 'NOT tag "order-paid"',
+                    actions: [
+                        'Wait 2 hours',
+                        'Send "Did you forget something?" email',
+                        'Wait 24 hours',
+                        'If still no purchase: Send SMS reminder'
+                    ]
+                },
+                template: 'cart_abandonment'
+            },
+            'public-confirm': {
+                title: 'Order Confirmation',
+                phase: 'Public Fundraiser',
+                phaseColor: '#f59e0b',
+                workflow: {
+                    name: 'Order Confirmation',
+                    trigger: 'Tag "order-paid" added',
+                    actions: [
+                        'Send confirmation email',
+                        'Send confirmation SMS',
+                        'Update Pipeline: Payment Confirmed',
+                        'Increment total_orders +1',
+                        'Add to total_raised',
+                        'Increment blankets_sold (if applicable)',
+                        'Notify coordinator'
+                    ]
+                },
+                template: 'order_confirmation',
+                fieldsUpdated: ['total_orders', 'total_raised', 'blankets_sold']
+            },
+            'public-remind': {
+                title: 'Campaign Reminder Sequence',
+                phase: 'Public Fundraiser',
+                phaseColor: '#f59e0b',
+                workflows: [
+                    {
+                        name: '7 Days Left',
+                        trigger: '7 days before campaign_end_date',
+                        action: 'Email + SMS to non-purchasers'
+                    },
+                    {
+                        name: '3 Days Left',
+                        trigger: '3 days before campaign_end_date',
+                        action: 'Email + SMS to non-purchasers'
+                    },
+                    {
+                        name: 'Last Day',
+                        trigger: 'On campaign_end_date',
+                        action: 'URGENT email + SMS to non-purchasers'
+                    }
+                ]
+            },
+            'public-ship': {
+                title: 'Order Shipped Notification',
+                phase: 'Public Fundraiser',
+                phaseColor: '#f59e0b',
+                workflow: {
+                    name: 'Order Shipped',
+                    trigger: 'Tag "order-shipped" added',
+                    actions: [
+                        'Send shipping email with tracking',
+                        'Send SMS with tracking link',
+                        'Update Pipeline: Shipped'
+                    ]
+                },
+                template: 'order_shipped',
+                dynamicFields: ['tracking_number', 'tracking_url', 'estimated_delivery']
+            }
+        };
+        
+        // Click handlers for steps
+        document.querySelectorAll('.step').forEach(step => {
+            step.addEventListener('click', () => {
+                const stepId = step.dataset.step;
+                showDetail(stepId);
+                document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+                step.classList.add('active');
+            });
+        });
+        
+        function showDetail(stepId) {
+            const detail = stepDetails[stepId];
+            if (!detail) {
+                document.getElementById('detailTitle').textContent = 'Details coming soon';
+                document.getElementById('detailContent').innerHTML = '<p style="color:#9ca3af;">Click a highlighted step for details.</p>';
+                document.getElementById('detailPhase').style.display = 'none';
+                document.getElementById('detailPanel').classList.add('open');
+                return;
+            }
+            
+            document.getElementById('detailTitle').textContent = detail.title;
+            document.getElementById('detailPhase').textContent = detail.phase;
+            document.getElementById('detailPhase').style.background = detail.phaseColor;
+            document.getElementById('detailPhase').style.display = 'inline-block';
+            
+            let html = `<p style="margin-top:1rem;color:#d1d5db;">${detail.description || ''}</p>`;
+            
+            if (detail.workflow) {
+                html += `
+                    <div class="detail-section">
+                        <h4>🔄 Workflow: ${detail.workflow.name}</h4>
+                        <ul class="detail-list">
+                            <li><strong>Trigger:</strong> ${detail.workflow.trigger}</li>
+                            ${detail.workflow.filter ? `<li><strong>Filter:</strong> ${detail.workflow.filter}</li>` : ''}
+                        </ul>
+                        <h4 style="margin-top:1rem;">Actions</h4>
+                        <ul class="detail-list">
+                            ${detail.workflow.actions.map(a => `<li>→ ${a}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            if (detail.workflows) {
+                html += `<div class="detail-section"><h4>🔄 Workflows</h4>`;
+                detail.workflows.forEach(w => {
+                    html += `
+                        <div style="margin-bottom:1rem;padding:0.75rem;background:rgba(0,0,0,0.2);border-radius:0.5rem;">
+                            <strong>${w.name}</strong>
+                            <p style="font-size:0.8rem;color:#9ca3af;margin-top:0.25rem;">Trigger: ${w.trigger}</p>
+                            <p style="font-size:0.8rem;color:#9ca3af;">Action: ${w.action}</p>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+            
+            if (detail.api) {
+                html += `
+                    <div class="detail-section">
+                        <h4>🔌 API Call</h4>
+                        <div class="detail-code">
+                            <span style="color:#f59e0b;">${detail.api.method}</span> ${detail.api.endpoint}<br>
+                            ${detail.api.body}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (detail.webhook) {
+                html += `
+                    <div class="detail-section">
+                        <h4>📤 Webhook</h4>
+                        <ul class="detail-list">
+                            <li><strong>Event:</strong> ${detail.webhook.event}</li>
+                            <li><strong>Payload:</strong> ${detail.webhook.payload}</li>
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            if (detail.fields) {
+                html += `
+                    <div class="detail-section">
+                        <h4>📋 Data Captured</h4>
+                        <ul class="detail-list">
+                            ${detail.fields.map(f => `<li>${f}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            if (detail.template) {
+                html += `
+                    <div class="detail-section">
+                        <h4>📧 Email Template</h4>
+                        <div class="detail-code">${detail.template}</div>
+                    </div>
+                `;
+            }
+            
+            if (detail.fieldsUpdated) {
+                html += `
+                    <div class="detail-section">
+                        <h4>📊 Fields Updated</h4>
+                        <ul class="detail-list">
+                            ${detail.fieldsUpdated.map(f => `<li><code>${f}</code></li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            if (detail.notes) {
+                html += `<p style="margin-top:1rem;padding:0.75rem;background:rgba(96,165,250,0.1);border-radius:0.5rem;font-size:0.85rem;">💡 ${detail.notes}</p>`;
+            }
+            
+            document.getElementById('detailContent').innerHTML = html;
+            document.getElementById('detailPanel').classList.add('open');
+        }
+        
+        function closeDetail() {
+            document.getElementById('detailPanel').classList.remove('open');
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        }
+        
+        // Close on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeDetail();
+        });
+    </script>
+</body>
+</html>
