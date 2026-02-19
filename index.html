@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fundraising Wizard - Project Tracker</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
@@ -17,10 +13,7 @@
             padding: 20px;
             color: #fff;
         }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+        .header { text-align: center; margin-bottom: 30px; }
         .header h1 {
             font-size: 2.5rem;
             background: linear-gradient(90deg, #f39c12, #e74c3c);
@@ -28,10 +21,7 @@
             -webkit-text-fill-color: transparent;
             margin-bottom: 5px;
         }
-        .header p {
-            color: #888;
-            font-size: 0.9rem;
-        }
+        .header p { color: #888; font-size: 0.9rem; }
         .board {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -39,12 +29,8 @@
             max-width: 1400px;
             margin: 0 auto;
         }
-        @media (max-width: 1200px) {
-            .board { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 600px) {
-            .board { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 1200px) { .board { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .board { grid-template-columns: 1fr; } }
         .column {
             background: rgba(255,255,255,0.05);
             border-radius: 12px;
@@ -59,10 +45,7 @@
             padding-bottom: 10px;
             border-bottom: 2px solid rgba(255,255,255,0.1);
         }
-        .column-header h2 {
-            font-size: 1rem;
-            font-weight: 600;
-        }
+        .column-header h2 { font-size: 1rem; font-weight: 600; }
         .count {
             background: rgba(255,255,255,0.2);
             padding: 2px 8px;
@@ -73,7 +56,6 @@
         .in-progress .column-header { border-bottom-color: #3498db; }
         .needs-matt .column-header { border-bottom-color: #e74c3c; }
         .done .column-header { border-bottom-color: #2ecc71; }
-        
         .card {
             background: rgba(255,255,255,0.08);
             border-radius: 8px;
@@ -89,22 +71,9 @@
         .card.priority-high { border-left-color: #e74c3c; }
         .card.priority-medium { border-left-color: #f39c12; }
         .card.priority-low { border-left-color: #3498db; }
-        
-        .card-title {
-            font-weight: 600;
-            margin-bottom: 6px;
-            font-size: 0.95rem;
-        }
-        .card-desc {
-            font-size: 0.8rem;
-            color: #aaa;
-            margin-bottom: 8px;
-        }
-        .card-meta {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
+        .card-title { font-weight: 600; margin-bottom: 6px; font-size: 0.95rem; }
+        .card-desc { font-size: 0.8rem; color: #aaa; margin-bottom: 8px; }
+        .card-meta { display: flex; gap: 8px; flex-wrap: wrap; }
         .tag {
             font-size: 0.7rem;
             padding: 2px 6px;
@@ -116,14 +85,9 @@
         .tag.legal { background: rgba(155, 89, 182, 0.3); }
         .tag.tech { background: rgba(46, 204, 113, 0.3); }
         .tag.payment { background: rgba(243, 156, 18, 0.3); }
-        
-        .updated {
-            text-align: center;
-            margin-top: 30px;
-            color: #666;
-            font-size: 0.8rem;
-        }
-        
+        .tag.marketing { background: rgba(241, 196, 15, 0.3); }
+        .tag.agents { background: rgba(26, 188, 156, 0.3); }
+        .updated { text-align: center; margin-top: 30px; color: #666; font-size: 0.8rem; }
         .legend {
             display: flex;
             justify-content: center;
@@ -131,21 +95,33 @@
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.8rem;
-            color: #888;
-        }
-        .legend-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 3px;
-        }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #888; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
         .legend-dot.high { background: #e74c3c; }
         .legend-dot.medium { background: #f39c12; }
         .legend-dot.low { background: #3498db; }
+        .resources-section {
+            max-width: 1400px;
+            margin: 40px auto 20px;
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+        }
+        .resources-section h2 { text-align: center; margin-bottom: 20px; font-size: 1.3rem; color: #f39c12; }
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        @media (max-width: 1000px) { .resources-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 500px) { .resources-grid { grid-template-columns: 1fr; } }
+        .resource-card { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 15px; }
+        .resource-icon { font-size: 1.5rem; margin-bottom: 8px; }
+        .resource-card h3 { font-size: 0.9rem; margin-bottom: 10px; color: #ddd; }
+        .resource-list { list-style: none; font-size: 0.8rem; }
+        .resource-list li { margin-bottom: 6px; color: #aaa; }
+        .resource-list a { color: #3498db; text-decoration: none; }
+        .resource-list a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -153,90 +129,187 @@
         <h1>🧙‍♂️ Fundraising Wizard</h1>
         <p>Project Tracker</p>
     </div>
-    
+
     <div class="legend">
         <div class="legend-item"><div class="legend-dot high"></div> High Priority</div>
         <div class="legend-item"><div class="legend-dot medium"></div> Medium Priority</div>
         <div class="legend-item"><div class="legend-dot low"></div> Low Priority</div>
     </div>
-    
+
     <div class="board">
         <!-- BACKLOG -->
         <div class="column backlog">
             <div class="column-header">
                 <h2>📋 Backlog</h2>
-                <span class="count">4</span>
+                <span class="count">14</span>
             </div>
-            
+
+            <div class="card priority-medium">
+                <div class="card-title">Landing Page / Website</div>
+                <div class="card-desc">Deploy on Vercel. Waiting on FAQ answers for copy.</div>
+                <div class="card-meta">
+                    <span class="tag tech">Tech</span>
+                    <span class="tag marketing">Marketing</span>
+                </div>
+            </div>
+
             <div class="card priority-medium">
                 <div class="card-title">Stripe Payment Integration</div>
-                <div class="card-desc">Bulk purchase flow for schools. Collect payments after contract signed.</div>
+                <div class="card-desc">Bulk purchase flow for schools. Needs Stripe account first.</div>
                 <div class="card-meta">
                     <span class="tag tech">Tech</span>
                     <span class="tag payment">Payment</span>
                 </div>
             </div>
-            
+
             <div class="card priority-medium">
-                <div class="card-title">Contract Flow (eSignatures.io)</div>
-                <div class="card-desc">Dynamic contracts with blanket design images. $0.49/doc.</div>
+                <div class="card-title">Social Media Presence</div>
+                <div class="card-desc">Facebook, Instagram, Pinterest accounts and content strategy.</div>
+                <div class="card-meta">
+                    <span class="tag marketing">Marketing</span>
+                </div>
+            </div>
+
+            <div class="card priority-low">
+                <div class="card-title">Buffer/Later Setup</div>
+                <div class="card-desc">Social scheduling tool for automated posting.</div>
+                <div class="card-meta">
+                    <span class="tag marketing">Marketing</span>
+                </div>
+            </div>
+
+            <div class="card priority-low">
+                <div class="card-title">Canva Pro</div>
+                <div class="card-desc">Design templates for social media and marketing materials.</div>
+                <div class="card-meta">
+                    <span class="tag marketing">Marketing</span>
+                </div>
+            </div>
+
+            <div class="card priority-low">
+                <div class="card-title">Meta/Google Ads Accounts</div>
+                <div class="card-desc">Set up ad accounts for paid acquisition.</div>
+                <div class="card-meta">
+                    <span class="tag marketing">Marketing</span>
+                </div>
+            </div>
+
+            <div class="card priority-low">
+                <div class="card-title">F5Bot Reddit Monitoring</div>
+                <div class="card-desc">Monitor Reddit for fundraising/blanket mentions.</div>
+                <div class="card-meta">
+                    <span class="tag marketing">Marketing</span>
+                </div>
+            </div>
+
+            <div class="card priority-low">
+                <div class="card-title">Slack Channel Setup</div>
+                <div class="card-desc">Replace WhatsApp for team communication.</div>
+                <div class="card-meta">
+                    <span class="tag tech">Tech</span>
+                </div>
+            </div>
+
+            <div class="card priority-medium">
+                <div class="card-title">Contract Flow (eSignatures)</div>
+                <div class="card-desc">Dynamic contracts with blanket design images.</div>
                 <div class="card-meta">
                     <span class="tag tech">Tech</span>
                     <span class="tag legal">Legal</span>
                 </div>
             </div>
-            
+
             <div class="card priority-low">
-                <div class="card-title">Custom Dashboard</div>
-                <div class="card-desc">GHL integration backend ready. Build customer-facing dashboard later.</div>
+                <div class="card-title">Customer-Facing Dashboard</div>
+                <div class="card-desc">GHL API backend ready. Build portal for school coordinators.</div>
                 <div class="card-meta">
                     <span class="tag tech">Tech</span>
-                    <span class="tag hal">Hal Built</span>
                 </div>
             </div>
-            
-            <div class="card priority-low">
-                <div class="card-title">Morning Briefs</div>
-                <div class="card-desc">Automated daily email summaries for Matt.</div>
+
+            <div class="card priority-medium">
+                <div class="card-title">Deploy Lead Hunter Agent</div>
+                <div class="card-desc">Automated lead discovery and qualification.</div>
                 <div class="card-meta">
-                    <span class="tag hal">Hal</span>
+                    <span class="tag agents">Agents</span>
+                </div>
+            </div>
+
+            <div class="card priority-medium">
+                <div class="card-title">Deploy Nurture Engine Agent</div>
+                <div class="card-desc">Automated follow-up and relationship building.</div>
+                <div class="card-meta">
+                    <span class="tag agents">Agents</span>
+                </div>
+            </div>
+
+            <div class="card priority-medium">
+                <div class="card-title">Deploy Content Machine Agent</div>
+                <div class="card-desc">Automated content creation and distribution.</div>
+                <div class="card-meta">
+                    <span class="tag agents">Agents</span>
+                </div>
+            </div>
+
+            <div class="card priority-low">
+                <div class="card-title">Deploy Remaining Agents</div>
+                <div class="card-desc">5 more agents from architecture doc (8 total designed).</div>
+                <div class="card-meta">
+                    <span class="tag agents">Agents</span>
                 </div>
             </div>
         </div>
-        
+
         <!-- IN PROGRESS -->
         <div class="column in-progress">
             <div class="column-header">
                 <h2>🔨 In Progress</h2>
-                <span class="count">2</span>
+                <span class="count">3</span>
             </div>
-            
+
             <div class="card priority-high">
-                <div class="card-title">GHL Browser Access</div>
-                <div class="card-desc">Matt setting up login so Hal can automate GHL tasks directly.</div>
+                <div class="card-title">GHL Workflows</div>
+                <div class="card-desc">0/10 built — next priority. Automation sequences for lead nurture, onboarding, etc.</div>
                 <div class="card-meta">
-                    <span class="tag matt">Needs Matt</span>
+                    <span class="tag hal">Hal</span>
                     <span class="tag tech">Tech</span>
                 </div>
             </div>
-            
-            <div class="card priority-medium">
-                <div class="card-title">Test GHL Dynamic Images</div>
-                <div class="card-desc">Can GHL Documents embed dynamic image URLs? Need to test before choosing contract solution.</div>
+
+            <div class="card priority-high">
+                <div class="card-title">GHL Email Templates</div>
+                <div class="card-desc">0/10 built. Branded email templates for workflow automation.</div>
                 <div class="card-meta">
+                    <span class="tag hal">Hal</span>
                     <span class="tag tech">Tech</span>
+                </div>
+            </div>
+
+            <div class="card priority-medium">
+                <div class="card-title">Julian Goldie Video Analysis</div>
+                <div class="card-desc">Download pending — internet connectivity issues.</div>
+                <div class="card-meta">
                     <span class="tag hal">Hal</span>
                 </div>
             </div>
         </div>
-        
+
         <!-- NEEDS MATT -->
         <div class="column needs-matt">
             <div class="column-header">
                 <h2>⚠️ Needs Matt</h2>
-                <span class="count">2</span>
+                <span class="count">6</span>
             </div>
-            
+
+            <div class="card priority-high">
+                <div class="card-title">Answer 15 FAQ Questions</div>
+                <div class="card-desc">Emailed to Gmail. Needed for landing page copy.</div>
+                <div class="card-meta">
+                    <span class="tag matt">Matt Action</span>
+                    <span class="tag marketing">Marketing</span>
+                </div>
+            </div>
+
             <div class="card priority-high">
                 <div class="card-title">Legal Docs → Lawyer Review</div>
                 <div class="card-desc">DPA, Privacy Policy, FAQ all drafted. Need lawyer review ($500-1500).</div>
@@ -245,51 +318,95 @@
                     <span class="tag legal">Legal</span>
                 </div>
             </div>
-            
+
             <div class="card priority-high">
-                <div class="card-title">GHL Login for Hal</div>
-                <div class="card-desc">Log into GHL in Hal's browser so he can automate setup tasks.</div>
+                <div class="card-title">Set Up Stripe Account</div>
+                <div class="card-desc">Identity verification required. Blocks payment integration.</div>
+                <div class="card-meta">
+                    <span class="tag matt">Matt Action</span>
+                    <span class="tag payment">Payment</span>
+                </div>
+            </div>
+
+            <div class="card priority-medium">
+                <div class="card-title">Distribution Sorting by Classroom</div>
+                <div class="card-desc">Matt adding to product spec today.</div>
                 <div class="card-meta">
                     <span class="tag matt">Matt Action</span>
                     <span class="tag tech">Tech</span>
                 </div>
             </div>
+
+            <div class="card priority-low">
+                <div class="card-title">Set RustDesk Password at Office</div>
+                <div class="card-desc">Need permanent password for remote access.</div>
+                <div class="card-meta">
+                    <span class="tag matt">Matt Action</span>
+                    <span class="tag tech">Tech</span>
+                </div>
+            </div>
+
+            <div class="card priority-high">
+                <div class="card-title">First Outreach Calls</div>
+                <div class="card-desc">Hot leads: Heather Franz, Cody Decole, Mackenzie Lyons.</div>
+                <div class="card-meta">
+                    <span class="tag matt">Matt Action</span>
+                    <span class="tag marketing">Marketing</span>
+                </div>
+            </div>
         </div>
-        
+
         <!-- DONE -->
         <div class="column done">
             <div class="column-header">
                 <h2>✅ Done</h2>
-                <span class="count">6</span>
+                <span class="count">16</span>
             </div>
-            
+
             <div class="card priority-high">
-                <div class="card-title">Design App (BlanketBuilder)</div>
+                <div class="card-title">Design Engine</div>
                 <div class="card-desc">Complete and working. Customers can create blanket designs.</div>
                 <div class="card-meta">
                     <span class="tag tech">Tech</span>
                     <span class="tag matt">Matt Built</span>
                 </div>
             </div>
-            
+
             <div class="card priority-high">
-                <div class="card-title">GHL Integration (Design → CRM)</div>
-                <div class="card-desc">Design app connected to GHL HQ.</div>
+                <div class="card-title">GHL Template</div>
+                <div class="card-desc">82 Custom Values, 13 Contact Fields, 20+ Tags, 3 Pipelines.</div>
                 <div class="card-meta">
                     <span class="tag tech">Tech</span>
-                    <span class="tag matt">Matt Built</span>
+                    <span class="tag hal">Hal Built</span>
                 </div>
             </div>
-            
+
+            <div class="card priority-medium">
+                <div class="card-title">Brand Guide v2.2</div>
+                <div class="card-desc">Complete brand identity and guidelines.</div>
+                <div class="card-meta">
+                    <span class="tag hal">Hal Built</span>
+                </div>
+            </div>
+
             <div class="card priority-high">
                 <div class="card-title">Legal Documents (Drafts)</div>
-                <div class="card-desc">DPA, Privacy Policy, Homepage FAQ - all drafted and ready.</div>
+                <div class="card-desc">DPA, Privacy Policy, FAQ — drafted and ready for review.</div>
                 <div class="card-meta">
                     <span class="tag legal">Legal</span>
                     <span class="tag hal">Hal Built</span>
                 </div>
             </div>
-            
+
+            <div class="card priority-medium">
+                <div class="card-title">GHL API Backend</div>
+                <div class="card-desc">2,300+ lines TypeScript. Ready for custom dashboard.</div>
+                <div class="card-meta">
+                    <span class="tag tech">Tech</span>
+                    <span class="tag hal">Hal Built</span>
+                </div>
+            </div>
+
             <div class="card priority-medium">
                 <div class="card-title">Research Library</div>
                 <div class="card-desc">15+ docs: competitors, FERPA/COPPA, suppliers, business model.</div>
@@ -297,130 +414,137 @@
                     <span class="tag hal">Hal Built</span>
                 </div>
             </div>
-            
+
             <div class="card priority-medium">
-                <div class="card-title">GHL API Backend</div>
-                <div class="card-desc">2,300+ lines TypeScript. Ready for custom dashboard when needed.</div>
+                <div class="card-title">GTM Research</div>
+                <div class="card-desc">Competitor analysis, call transcripts, atomic networks strategy.</div>
                 <div class="card-meta">
-                    <span class="tag tech">Tech</span>
                     <span class="tag hal">Hal Built</span>
+                    <span class="tag marketing">Marketing</span>
                 </div>
             </div>
-            
+
             <div class="card priority-low">
                 <div class="card-title">Gmail/Calendar Access</div>
-                <div class="card-desc">Hal can check emails and calendar via browser automation.</div>
+                <div class="card-desc">Working via gog CLI.</div>
                 <div class="card-meta">
                     <span class="tag hal">Hal Setup</span>
                 </div>
             </div>
+
+            <div class="card priority-low">
+                <div class="card-title">FW Dashboard</div>
+                <div class="card-desc">This project tracker — live on GitHub Pages.</div>
+                <div class="card-meta">
+                    <span class="tag hal">Hal Built</span>
+                </div>
+            </div>
+
+            <div class="card priority-low">
+                <div class="card-title">Daily Intel Cron Job</div>
+                <div class="card-desc">Running daily at 8am MST.</div>
+                <div class="card-meta">
+                    <span class="tag hal">Hal Setup</span>
+                </div>
+            </div>
+
+            <div class="card priority-medium">
+                <div class="card-title">Agent Architecture Doc</div>
+                <div class="card-desc">8 agents designed with roles, triggers, and workflows.</div>
+                <div class="card-meta">
+                    <span class="tag agents">Agents</span>
+                    <span class="tag hal">Hal Built</span>
+                </div>
+            </div>
+
+            <div class="card priority-high">
+                <div class="card-title">Landing Page FAQ</div>
+                <div class="card-desc">55 questions compiled and organized.</div>
+                <div class="card-meta">
+                    <span class="tag marketing">Marketing</span>
+                    <span class="tag hal">Hal Built</span>
+                </div>
+            </div>
+
+            <div class="card priority-medium">
+                <div class="card-title">Call Analysis</div>
+                <div class="card-desc">All 8 transcripts analyzed — insights extracted.</div>
+                <div class="card-meta">
+                    <span class="tag hal">Hal Built</span>
+                    <span class="tag marketing">Marketing</span>
+                </div>
+            </div>
+
+            <div class="card priority-low">
+                <div class="card-title">Clean-Sessions Skill</div>
+                <div class="card-desc">Built and operational.</div>
+                <div class="card-meta">
+                    <span class="tag hal">Hal Built</span>
+                </div>
+            </div>
+
+            <div class="card priority-low">
+                <div class="card-title">OpenClaw Updated</div>
+                <div class="card-desc">Updated to 2026.2.17.</div>
+                <div class="card-meta">
+                    <span class="tag tech">Tech</span>
+                </div>
+            </div>
+
+            <div class="card priority-medium">
+                <div class="card-title">Remotion Video Project</div>
+                <div class="card-desc">Campaign promo videos — framework set up.</div>
+                <div class="card-meta">
+                    <span class="tag tech">Tech</span>
+                    <span class="tag marketing">Marketing</span>
+                </div>
+            </div>
         </div>
     </div>
-    
+
     <!-- RESOURCES SECTION -->
     <div class="resources-section">
         <h2>📚 Project Resources</h2>
         <div class="resources-grid">
             <div class="resource-card">
                 <div class="resource-icon">📓</div>
-                <h3>NotebookLM Notebooks</h3>
+                <h3>NotebookLM</h3>
                 <ul class="resource-list">
                     <li><a href="https://notebooklm.google.com/notebook/821bcc82-6471-49e3-b2f7-5d00326aef67" target="_blank">Fundraiser Blankets Research</a></li>
-                    <!-- Add more NotebookLM links here -->
                 </ul>
             </div>
             <div class="resource-card">
-                <div class="resource-icon">📁</div>
-                <h3>Google Drive</h3>
+                <div class="resource-icon">💻</div>
+                <h3>GitHub</h3>
                 <ul class="resource-list">
-                    <li><a href="https://drive.google.com" target="_blank">Competition Research Folder</a></li>
-                </ul>
-            </div>
-            <div class="resource-card">
-                <div class="resource-icon">🎨</div>
-                <h3>Design Resources</h3>
-                <ul class="resource-list">
-                    <li><a href="https://ai.studio/apps/drive/1Wf7SPyNQBs-FDwMRCvQEGKQXYjGG1bv8" target="_blank">Blanket Design Software</a></li>
+                    <li><a href="https://github.com/HALBERT9000AI/fw-dashboard" target="_blank">Dashboard Repo</a></li>
+                    <li><a href="https://halbert9000ai.github.io/fw-dashboard/" target="_blank">Live Dashboard</a></li>
                 </ul>
             </div>
             <div class="resource-card">
                 <div class="resource-icon">📋</div>
-                <h3>Documentation</h3>
+                <h3>Key Documents</h3>
                 <ul class="resource-list">
-                    <li><a href="PRD-Portal-Template-Setup.md" target="_blank">Portal Template PRD</a></li>
-                    <li>Brand Guidelines (Slides)</li>
-                    <li>Legal Docs (DPA, Privacy, FAQ)</li>
+                    <li>Agent Architecture (8 agents)</li>
+                    <li>Call Analysis (8 transcripts)</li>
+                    <li>Landing FAQ (55 questions)</li>
+                    <li>Brand Guide v2.2</li>
                 </ul>
             </div>
             <div class="resource-card">
                 <div class="resource-icon">🗺️</div>
-                <h3>System Architecture</h3>
+                <h3>GHL Template</h3>
                 <ul class="resource-list">
-                    <li><a href="customer-journey.html" target="_blank">Customer Journey Map</a> ⭐</li>
-                    <li>85 Custom Fields</li>
-                    <li>10 Workflows</li>
-                    <li>2 Pipelines</li>
+                    <li>82 Custom Values</li>
+                    <li>13 Contact Fields</li>
+                    <li>20+ Tags</li>
+                    <li>3 Pipelines</li>
+                    <li>10 Workflows (pending)</li>
                 </ul>
             </div>
         </div>
     </div>
-    
-    <p class="updated">Last updated: February 2, 2026 10:50 PM MST</p>
-    
-    <style>
-        .resources-section {
-            max-width: 1400px;
-            margin: 40px auto 20px;
-            padding: 20px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-        }
-        .resources-section h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-            color: #f39c12;
-        }
-        .resources-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-        }
-        @media (max-width: 1000px) {
-            .resources-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 500px) {
-            .resources-grid { grid-template-columns: 1fr; }
-        }
-        .resource-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 8px;
-            padding: 15px;
-        }
-        .resource-icon {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-        }
-        .resource-card h3 {
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-            color: #ddd;
-        }
-        .resource-list {
-            list-style: none;
-            font-size: 0.8rem;
-        }
-        .resource-list li {
-            margin-bottom: 6px;
-            color: #aaa;
-        }
-        .resource-list a {
-            color: #3498db;
-            text-decoration: none;
-        }
-        .resource-list a:hover {
-            text-decoration: underline;
-        }
-    </style>
+
+    <p class="updated">Last updated: February 18, 2026 7:25 PM MST</p>
 </body>
 </html>
